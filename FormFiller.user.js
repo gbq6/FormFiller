@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FormFiller
-// @version      1.6
+// @version      1.1
 // @description  Fills form fields on configured websites
 // @author       gbq6
 // @match        *://*/*
@@ -9,6 +9,8 @@
 
 const DASH = "-"
 const DOT = "."
+const NOTHING = ""
+const SLASH = "/"
 const SPACE = " "
 
 // DO NOT MODIFY ANYTHING ABOVE THIS LINE
@@ -20,6 +22,24 @@ const SPACE = " "
 // DO NOT MODIFY ANYTHING BELOW THIS LINE
 
 const websites = {
+    "bekeltet.bkik.hu": {
+        "edit-vezeteknev": name.last,
+        "edit-keresztnev": name.first,
+        "edit-telefonszam": join(NOTHING, phone.countryCode, phone.carrierCode, phone.number),
+        "edit-e-mail": email,
+
+        "edit-fogyaszto-cim-orszag": address.country,
+        "edit-fogyaszto-cim-iranyitoszam": address.zipCode,
+        "edit-fogyaszto-cim-telepules": address.city,
+        "edit-fogyaszto-cim-utca": join(SPACE, address.streetName, address.streetType),
+        "edit-fogyaszto-cim-hazszam": address.number,
+
+        "edit-ugyfelkapu-nev": join(SPACE, name.title, name.last, name.first, name.middle),
+        "edit-ugyfelkapu-szuletesi-nev": join(SPACE, maidenName.last, maidenName.first, maidenName.middle),
+        "edit-ugyfelkapu-anyja-neve": join(SPACE, mothersMaidenName.last, mothersMaidenName.first, mothersMaidenName.middle),
+        "edit-ugyfelkapu-szuletesi-hely": birth.city,
+        "edit-ugyfelkapu-szuletesi-ido": join(DASH, birth.year, birth.month, birth.day)
+    },
     "e-nmhh.nmhh.hu": {
         "form_ViseltNev_elo": name.title,
         "form_ViseltNev_vezetek": name.last,
