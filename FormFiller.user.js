@@ -7,215 +7,244 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
-    'use strict';
+;(function () {
+	'use strict'
 
-    const DASH = "-";
-    const SPACE = " ";
-    const NOTHING = "";
-    const STORAGE_KEY = "formfillerpro_data_v1";
+	const DASH = '-'
+	const SPACE = ' '
+	const NOTHING = ''
+	const STORAGE_KEY = 'formfillerpro_data_v1'
 
-    const defaultData = {
-        COUNTRY: "Magyarország",
-        COUNTRY_ASCII: "Hungary",
-        name: { title: "", first: "", middle: "", last: "" },
-        maidenName: { first: "", middle: "", last: "" },
-        mothersMaidenName: { first: "", middle: "", last: "" },
-        birth: { country: "Magyarország", city: "", year: "", month: "", day: "" },
-        phone: { countryCode: "36", carrierCode: "", number: "" },
-        email: "",
-        address: { country: "Magyarország", zipCode: "", city: "", streetName: "", streetType: "", number: "", floor: "", door: "" }
-    };
+	const defaultData = {
+		COUNTRY: 'Magyarország',
+		COUNTRY_ASCII: 'Hungary',
+		name: { title: '', first: '', middle: '', last: '' },
+		maidenName: { first: '', middle: '', last: '' },
+		mothersMaidenName: { first: '', middle: '', last: '' },
+		birth: { country: 'Magyarország', city: '', year: '', month: '', day: '' },
+		phone: { countryCode: '36', carrierCode: '', number: '' },
+		email: '',
+		address: {
+			country: 'Magyarország',
+			zipCode: '',
+			city: '',
+			streetName: '',
+			streetType: '',
+			number: '',
+			floor: '',
+			door: '',
+		},
+	}
 
-    function loadData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-            return defaultData;
-        }
-        return JSON.parse(raw);
-    }
+	function loadData() {
+		const raw = localStorage.getItem(STORAGE_KEY)
+		if (!raw) {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData))
+			return defaultData
+		}
+		return JSON.parse(raw)
+	}
 
-    function saveData(newData) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-        } catch (err) {}
-    }
+	function saveData(newData) {
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(newData))
+		} catch (err) {}
+	}
 
-    let profile = loadData();
+	let profile = loadData()
 
-    function removeAccents(str) {
-        if (!str || typeof str !== 'string') return "";
-        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    }
+	function removeAccents(str) {
+		if (!str || typeof str !== 'string') return ''
+		return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+	}
 
-    const maidenName = profile.maidenName;
+	const maidenName = profile.maidenName
 
-    const mothersMaidenName = profile.mothersMaidenName;
+	const mothersMaidenName = profile.mothersMaidenName
 
-    const birth = profile.birth;
+	const birth = profile.birth
 
-    const address = profile.address;
+	const address = profile.address
 
-    const name_ascii = {
-        first: removeAccents(profile.name.first),
-        middle: removeAccents(profile.name.middle),
-        last: removeAccents(profile.name.last)
-    };
+	const name_ascii = {
+		first: removeAccents(profile.name.first),
+		middle: removeAccents(profile.name.middle),
+		last: removeAccents(profile.name.last),
+	}
 
-    const maidenName_ascii = {
-        first: removeAccents(maidenName.first),
-        middle: removeAccents(maidenName.middle),
-        last: removeAccents(maidenName.last)
-    };
+	const maidenName_ascii = {
+		first: removeAccents(maidenName.first),
+		middle: removeAccents(maidenName.middle),
+		last: removeAccents(maidenName.last),
+	}
 
-    const mothersMaidenName_ascii = {
-        first: removeAccents(mothersMaidenName.first),
-        middle: removeAccents(mothersMaidenName.middle),
-        last: removeAccents(mothersMaidenName.last)
-    };
+	const mothersMaidenName_ascii = {
+		first: removeAccents(mothersMaidenName.first),
+		middle: removeAccents(mothersMaidenName.middle),
+		last: removeAccents(mothersMaidenName.last),
+	}
 
-    const websites = {
-        "bekeltet.bkik.hu": {
-            "edit-vezeteknev": profile.name.last,
-            "edit-keresztnev": profile.name.first,
-            "edit-telefonszam": join(NOTHING, profile.phone.countryCode, profile.phone.carrierCode, profile.phone.number),
-            "edit-e-mail": profile.email,
+	const websites = {
+		'bekeltet.bkik.hu': {
+			'edit-vezeteknev': profile.name.last,
+			'edit-keresztnev': profile.name.first,
+			'edit-telefonszam': join(
+				NOTHING,
+				profile.phone.countryCode,
+				profile.phone.carrierCode,
+				profile.phone.number
+			),
+			'edit-e-mail': profile.email,
 
-            "edit-fogyaszto-cim-orszag": address.country,
-            "edit-fogyaszto-cim-iranyitoszam": address.zipCode,
-            "edit-fogyaszto-cim-telepules": address.city,
-            "edit-fogyaszto-cim-utca": join(SPACE, address.streetName, address.streetType),
-            "edit-fogyaszto-cim-hazszam": address.number,
+			'edit-fogyaszto-cim-orszag': address.country,
+			'edit-fogyaszto-cim-iranyitoszam': address.zipCode,
+			'edit-fogyaszto-cim-telepules': address.city,
+			'edit-fogyaszto-cim-utca': join(SPACE, address.streetName, address.streetType),
+			'edit-fogyaszto-cim-hazszam': address.number,
 
-            "edit-ugyfelkapu-nev": join(SPACE, profile.name.title, profile.name.last, profile.name.first, profile.name.middle),
-            "edit-ugyfelkapu-szuletesi-nev": join(SPACE, maidenName.last, maidenName.first, maidenName.middle),
-            "edit-ugyfelkapu-anyja-neve": join(SPACE, mothersMaidenName.last, mothersMaidenName.first, mothersMaidenName.middle),
-            "edit-ugyfelkapu-szuletesi-hely": birth.city,
-            "edit-ugyfelkapu-szuletesi-ido": join(DASH, birth.year, birth.month, birth.day)
-        },
-        "e-nmhh.nmhh.hu": {
-            "form_ViseltNev_elo": profile.name.title,
-            "form_ViseltNev_vezetek": profile.name.last,
-            "form_ViseltNev_kereszt": profile.name.first,
-            "form_ViseltNev_uto": profile.name.middle,
+			'edit-ugyfelkapu-nev': join(
+				SPACE,
+				profile.name.title,
+				profile.name.last,
+				profile.name.first,
+				profile.name.middle
+			),
+			'edit-ugyfelkapu-szuletesi-nev': join(SPACE, maidenName.last, maidenName.first, maidenName.middle),
+			'edit-ugyfelkapu-anyja-neve': join(
+				SPACE,
+				mothersMaidenName.last,
+				mothersMaidenName.first,
+				mothersMaidenName.middle
+			),
+			'edit-ugyfelkapu-szuletesi-hely': birth.city,
+			'edit-ugyfelkapu-szuletesi-ido': join(DASH, birth.year, birth.month, birth.day),
+		},
+		'e-nmhh.nmhh.hu': {
+			form_ViseltNev_elo: profile.name.title,
+			form_ViseltNev_vezetek: profile.name.last,
+			form_ViseltNev_kereszt: profile.name.first,
+			form_ViseltNev_uto: profile.name.middle,
 
-            "form_Szulnev_vezetek": maidenName.last,
-            "form_Szulnev_kereszt": maidenName.first,
-            "form_Szulnev_uto": maidenName.middle,
+			form_Szulnev_vezetek: maidenName.last,
+			form_Szulnev_kereszt: maidenName.first,
+			form_Szulnev_uto: maidenName.middle,
 
-            "form_AnyjaSzulNeve_vezetek": mothersMaidenName.last,
-            "form_AnyjaSzulNeve_kereszt": mothersMaidenName.first,
-            "form_AnyjaSzulNeve_uto": mothersMaidenName.middle,
+			form_AnyjaSzulNeve_vezetek: mothersMaidenName.last,
+			form_AnyjaSzulNeve_kereszt: mothersMaidenName.first,
+			form_AnyjaSzulNeve_uto: mothersMaidenName.middle,
 
-            "form_Szulhely_te": birth.city,
-            "form_SzuletesiIdo": join(DASH, birth.year, birth.month, birth.day),
+			form_Szulhely_te: birth.city,
+			form_SzuletesiIdo: join(DASH, birth.year, birth.month, birth.day),
 
-            "form_A11_pref": profile.phone.countryCode,
-            "form_A11_telBlock1": profile.phone.carrierCode,
-            "form_A11_telBock2": profile.phone.number,
+			form_A11_pref: profile.phone.countryCode,
+			form_A11_telBlock1: profile.phone.carrierCode,
+			form_A11_telBock2: profile.phone.number,
 
-            "form_emailAddress": profile.email,
+			form_emailAddress: profile.email,
 
-            "form_Benyujto_Lakcim_ir": address.zipCode,
-            "form_Benyujto_Lakcim_varos": address.city,
-            "form_Benyujto_Lakcim_utca":
-                join(SPACE, address.streetName, address.streetType, address.number, address.floor, address.door)
-        }
-    };
+			form_Benyujto_Lakcim_ir: address.zipCode,
+			form_Benyujto_Lakcim_varos: address.city,
+			form_Benyujto_Lakcim_utca: join(
+				SPACE,
+				address.streetName,
+				address.streetType,
+				address.number,
+				address.floor,
+				address.door
+			),
+		},
+	}
 
-    function join(separator, ...strings) {
-        return strings
-            .filter(string => string && typeof string === 'string' && string.trim() !== "")
-            .join(separator);
-    }
+	function join(separator, ...strings) {
+		return strings.filter((string) => string && typeof string === 'string' && string.trim() !== '').join(separator)
+	}
 
-    window.addEventListener('load', () => {
-        const websiteConfig = websites[window.location.hostname];
+	window.addEventListener('load', () => {
+		const websiteConfig = websites[window.location.hostname]
 
-        const toolbar = document.createElement("div");
-        toolbar.style.position = "fixed";
-        toolbar.style.bottom = "15px";
-        toolbar.style.right = "15px";
-        toolbar.style.zIndex = "2147483647";
-        toolbar.style.display = "flex";
-        toolbar.style.gap = "8px";
+		const toolbar = document.createElement('div')
+		toolbar.style.position = 'fixed'
+		toolbar.style.bottom = '15px'
+		toolbar.style.right = '15px'
+		toolbar.style.zIndex = '2147483647'
+		toolbar.style.display = 'flex'
+		toolbar.style.gap = '8px'
 
-        if (websiteConfig) {
-            const fillButton = createButton("⚡ Fill Form", "#007BFF", () => fillFormFields(websiteConfig));
-            toolbar.appendChild(fillButton);
-        }
+		if (websiteConfig) {
+			const fillButton = createButton('⚡ Fill Form', '#007BFF', () => fillFormFields(websiteConfig))
+			toolbar.appendChild(fillButton)
+		}
 
-        const settingsButton = createButton("⚙️ Settings", "#343A40", openSettingsModal);
-        toolbar.appendChild(settingsButton);
+		const settingsButton = createButton('⚙️ Settings', '#343A40', openSettingsModal)
+		toolbar.appendChild(settingsButton)
 
-        document.body.appendChild(toolbar);
+		document.body.appendChild(toolbar)
 
-        document.addEventListener("keydown", (e) => {
-            if (e.ctrlKey && e.altKey && (e.key === "r" || e.key === "R")) {
-                e.preventDefault();
-                if (websiteConfig) fillFormFields(websiteConfig);
-            }
-        });
-    });
+		document.addEventListener('keydown', (e) => {
+			if (e.ctrlKey && e.altKey && (e.key === 'r' || e.key === 'R')) {
+				e.preventDefault()
+				if (websiteConfig) fillFormFields(websiteConfig)
+			}
+		})
+	})
 
-    function createButton(text, bgColor, onClick) {
-        const btn = document.createElement("button");
-        btn.textContent = text;
-        btn.style.padding = "8px 14px";
-        btn.style.backgroundColor = bgColor;
-        btn.style.color = "white";
-        btn.style.border = "none";
-        btn.style.borderRadius = "6px";
-        btn.style.cursor = "pointer";
-        btn.style.fontFamily = "system-ui, sans-serif";
-        btn.style.fontSize = "13px";
-        btn.style.boxShadow = "0 2px 5px rgba(0,0,0,0.3)";
-        btn.addEventListener("click", onClick);
-        return btn;
-    }
+	function createButton(text, bgColor, onClick) {
+		const btn = document.createElement('button')
+		btn.textContent = text
+		btn.style.padding = '8px 14px'
+		btn.style.backgroundColor = bgColor
+		btn.style.color = 'white'
+		btn.style.border = 'none'
+		btn.style.borderRadius = '6px'
+		btn.style.cursor = 'pointer'
+		btn.style.fontFamily = 'system-ui, sans-serif'
+		btn.style.fontSize = '13px'
+		btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)'
+		btn.addEventListener('click', onClick)
+		return btn
+	}
 
-    function fillFormFields(config) {
-        Object.keys(config).forEach((elementId) => {
-            const field = document.getElementById(elementId);
-            const value = config[elementId];
+	function fillFormFields(config) {
+		Object.keys(config).forEach((elementId) => {
+			const field = document.getElementById(elementId)
+			const value = config[elementId]
 
-            if (field) {
-                field.value = value || "";
-                field.dispatchEvent(new Event('input', { bubbles: true }));
-                field.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-        });
-    }
+			if (field) {
+				field.value = value || ''
+				field.dispatchEvent(new Event('input', { bubbles: true }))
+				field.dispatchEvent(new Event('change', { bubbles: true }))
+			}
+		})
+	}
 
-    function openSettingsModal() {
-        let existing = document.getElementById("ff-modal-overlay");
-        if (existing) existing.remove();
+	function openSettingsModal() {
+		let existing = document.getElementById('ff-modal-overlay')
+		if (existing) existing.remove()
 
-        const overlay = document.createElement("div");
-        overlay.id = "ff-modal-overlay";
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100vw";
-        overlay.style.height = "100vh";
-        overlay.style.backgroundColor = "rgba(0,0,0,0.5)";
-        overlay.style.zIndex = "2147483647";
-        overlay.style.display = "flex";
-        overlay.style.justifyContent = "center";
-        overlay.style.alignItems = "center";
+		const overlay = document.createElement('div')
+		overlay.id = 'ff-modal-overlay'
+		overlay.style.position = 'fixed'
+		overlay.style.top = '0'
+		overlay.style.left = '0'
+		overlay.style.width = '100vw'
+		overlay.style.height = '100vh'
+		overlay.style.backgroundColor = 'rgba(0,0,0,0.5)'
+		overlay.style.zIndex = '2147483647'
+		overlay.style.display = 'flex'
+		overlay.style.justifyContent = 'center'
+		overlay.style.alignItems = 'center'
 
-        const modal = document.createElement("div");
-        modal.style.backgroundColor = "white";
-        modal.style.padding = "25px";
-        modal.style.borderRadius = "10px";
-        modal.style.width = "500px";
-        modal.style.maxHeight = "85vh";
-        modal.style.overflowY = "auto";
-        modal.style.fontFamily = "system-ui, sans-serif";
-        modal.style.boxShadow = "0 4px 20px rgba(0,0,0,0.4)";
+		const modal = document.createElement('div')
+		modal.style.backgroundColor = 'white'
+		modal.style.padding = '25px'
+		modal.style.borderRadius = '10px'
+		modal.style.width = '500px'
+		modal.style.maxHeight = '85vh'
+		modal.style.overflowY = 'auto'
+		modal.style.fontFamily = 'system-ui, sans-serif'
+		modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)'
 
-        modal.innerHTML = `
+		modal.innerHTML = `
             <h3 style="margin-top:0; color:#333;">FormFillerPro Settings</h3>
             <form id="ff-settings-form">
                 <fieldset style="margin-bottom:12px; border:1px solid #ddd; border-radius:6px; padding:10px;">
@@ -288,85 +317,84 @@
                     <button type="submit" style="padding:8px 14px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Save Changes</button>
                 </div>
             </form>
-        `;
+        `
 
-        setTimeout(() => {
-            modal.querySelectorAll("input").forEach(input => {
-                input.style.padding = "6px";
-                input.style.boxSizing = "border-box";
-                input.style.border = "1px solid #ccc";
-                input.style.borderRadius = "4px";
-                input.style.fontSize = "13px";
-            });
-        }, 10);
+		setTimeout(() => {
+			modal.querySelectorAll('input').forEach((input) => {
+				input.style.padding = '6px'
+				input.style.boxSizing = 'border-box'
+				input.style.border = '1px solid #ccc'
+				input.style.borderRadius = '4px'
+				input.style.fontSize = '13px'
+			})
+		}, 10)
 
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
+		overlay.appendChild(modal)
+		document.body.appendChild(overlay)
 
-        function handleSave() {
-            profile.name.title = document.getElementById("ff-title").value;
-            profile.name.last = document.getElementById("ff-lastname").value;
-            profile.name.first = document.getElementById("ff-firstname").value;
-            profile.name.middle = document.getElementById("ff-middlename").value;
+		function handleSave() {
+			profile.name.title = document.getElementById('ff-title').value
+			profile.name.last = document.getElementById('ff-lastname').value
+			profile.name.first = document.getElementById('ff-firstname').value
+			profile.name.middle = document.getElementById('ff-middlename').value
 
-            profile.maidenName.last = document.getElementById("ff-m-lastname").value;
-            profile.maidenName.first = document.getElementById("ff-m-firstname").value;
-            profile.maidenName.middle = document.getElementById("ff-m-middlename").value;
+			profile.maidenName.last = document.getElementById('ff-m-lastname').value
+			profile.maidenName.first = document.getElementById('ff-m-firstname').value
+			profile.maidenName.middle = document.getElementById('ff-m-middlename').value
 
-            profile.mothersMaidenName.last = document.getElementById("ff-mom-lastname").value;
-            profile.mothersMaidenName.first = document.getElementById("ff-mom-firstname").value;
-            profile.mothersMaidenName.middle = document.getElementById("ff-mom-middlename").value;
+			profile.mothersMaidenName.last = document.getElementById('ff-mom-lastname').value
+			profile.mothersMaidenName.first = document.getElementById('ff-mom-firstname').value
+			profile.mothersMaidenName.middle = document.getElementById('ff-mom-middlename').value
 
-            profile.birth.country = document.getElementById("ff-birthcountry").value;
-            profile.birth.city = document.getElementById("ff-birthcity").value;
-            profile.birth.year = document.getElementById("ff-birthyear").value;
-            profile.birth.month = document.getElementById("ff-birthmonth").value;
-            profile.birth.day = document.getElementById("ff-birthday").value;
+			profile.birth.country = document.getElementById('ff-birthcountry').value
+			profile.birth.city = document.getElementById('ff-birthcity').value
+			profile.birth.year = document.getElementById('ff-birthyear').value
+			profile.birth.month = document.getElementById('ff-birthmonth').value
+			profile.birth.day = document.getElementById('ff-birthday').value
 
-            profile.phone.countryCode = document.getElementById("ff-ccode").value;
-            profile.phone.carrierCode = document.getElementById("ff-carrier").value;
-            profile.phone.number = document.getElementById("ff-phonenum").value;
-            profile.email = document.getElementById("ff-email").value;
+			profile.phone.countryCode = document.getElementById('ff-ccode').value
+			profile.phone.carrierCode = document.getElementById('ff-carrier').value
+			profile.phone.number = document.getElementById('ff-phonenum').value
+			profile.email = document.getElementById('ff-email').value
 
-            profile.address.country = document.getElementById("ff-acountry").value;
-            profile.address.zipCode = document.getElementById("ff-zip").value;
-            profile.address.city = document.getElementById("ff-city").value;
-            profile.address.streetName = document.getElementById("ff-street").value;
-            profile.address.streetType = document.getElementById("ff-stype").value;
-            profile.address.number = document.getElementById("ff-house").value;
-            profile.address.floor = document.getElementById("ff-floor").value;
-            profile.address.door = document.getElementById("ff-door").value;
+			profile.address.country = document.getElementById('ff-acountry').value
+			profile.address.zipCode = document.getElementById('ff-zip').value
+			profile.address.city = document.getElementById('ff-city').value
+			profile.address.streetName = document.getElementById('ff-street').value
+			profile.address.streetType = document.getElementById('ff-stype').value
+			profile.address.number = document.getElementById('ff-house').value
+			profile.address.floor = document.getElementById('ff-floor').value
+			profile.address.door = document.getElementById('ff-door').value
 
-            saveData(profile);
-            overlay.remove();
-            location.reload();
-        }
+			saveData(profile)
+			overlay.remove()
+			location.reload()
+		}
 
-        const modalKeyListener = (e) => {
-            if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
-                e.preventDefault();
-                handleSave();
-            }
-        };
-        document.addEventListener("keydown", modalKeyListener);
+		const modalKeyListener = (e) => {
+			if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+				e.preventDefault()
+				handleSave()
+			}
+		}
+		document.addEventListener('keydown', modalKeyListener)
 
-        document.getElementById("ff-cancel").addEventListener("click", () => {
-            document.removeEventListener("keydown", modalKeyListener);
-            overlay.remove();
-        });
+		document.getElementById('ff-cancel').addEventListener('click', () => {
+			document.removeEventListener('keydown', modalKeyListener)
+			overlay.remove()
+		})
 
-        overlay.addEventListener("click", (e) => {
-            if (e.target === overlay) {
-                document.removeEventListener("keydown", modalKeyListener);
-                overlay.remove();
-            }
-        });
+		overlay.addEventListener('click', (e) => {
+			if (e.target === overlay) {
+				document.removeEventListener('keydown', modalKeyListener)
+				overlay.remove()
+			}
+		})
 
-        document.getElementById("ff-settings-form").addEventListener("submit", (e) => {
-            e.preventDefault();
-            document.removeEventListener("keydown", modalKeyListener);
-            handleSave();
-        });
-    }
-
-})();
+		document.getElementById('ff-settings-form').addEventListener('submit', (e) => {
+			e.preventDefault()
+			document.removeEventListener('keydown', modalKeyListener)
+			handleSave()
+		})
+	}
+})()
