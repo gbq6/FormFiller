@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FormFiller
-// @version      2.0.1
+// @version      2.0.2
 // @description  Fills form fields on configured websites
 // @author       gbq6
 // @match        *://*/*
@@ -13,7 +13,7 @@
 	const DASH = '-'
 	const SPACE = ' '
 	const NOTHING = ''
-	const STORAGE_KEY = 'formfillerpro_data_v1'
+	const STORAGE_KEY = 'formfiller_data_v1'
 
 	const defaultData = {
 		COUNTRY: 'Magyarország',
@@ -252,7 +252,7 @@
 		modal.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)'
 
 		modal.innerHTML = `
-            <h3 style="margin-top:0; color:#333;">FormFillerPro Settings</h3>
+            <h3 style="margin-top:0; color:#333;">FormFiller Settings</h3>
             <form id="ff-settings-form">
                 <fieldset style="margin-bottom:12px; border:1px solid #ddd; border-radius:6px; padding:10px;">
                     <legend style="font-weight:bold; font-size:12px;">Name</legend>
