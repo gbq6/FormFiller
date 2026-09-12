@@ -6,3 +6,4 @@ A self-contained Safari userscript (compatible with the Userscripts app) that au
 
 - `bekeltet.bkik.hu`
 - `e-nmhh.nmhh.hu`
+- `panaszrendezes.hu`
