@@ -109,7 +109,7 @@ function join(separator, ...strings) {
         document.body.appendChild(triggerButton)
 
         // Add a click event to the button
-         triggerButton.addEventListener("click", () => fillFormFields(websiteConfig))
+        triggerButton.addEventListener("click", () => fillFormFields(websiteConfig))
 
         // Add a keyboard shortcut: Option + Ctrl + R
         document.addEventListener("keydown", (e) => {
