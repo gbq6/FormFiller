@@ -1,23 +1,6 @@
 {
 	"name": "formfiller",
 	"version": "2.0.0",
-	"description": "A self-contained Safari userscript (compatible with the Userscripts app) that automatically populates repetitive form fields across configured websites.",
-	"main": "FormFiller.user.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/gbq6/FormFiller.git"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"type": "commonjs",
-	"bugs": {
-		"url": "https://github.com/gbq6/FormFiller/issues"
-	},
-	"homepage": "https://github.com/gbq6/FormFiller#readme",
 	"devDependencies": {
 		"prettier": "^3.9.6"
 	}
