@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FormFiller
-// @version      2.0.0
+// @version      2.0.1
 // @description  Fills form fields on configured websites
 // @author       gbq6
 // @match        *://*/*
@@ -169,6 +169,8 @@
 	window.addEventListener('load', () => {
 		const websiteConfig = websites[window.location.hostname]
 
+		if (!websiteConfig) return
+
 		const toolbar = document.createElement('div')
 		toolbar.style.position = 'fixed'
 		toolbar.style.bottom = '15px'
@@ -177,10 +179,8 @@
 		toolbar.style.display = 'flex'
 		toolbar.style.gap = '8px'
 
-		if (websiteConfig) {
-			const fillButton = createButton('⚡ Fill Form', '#007BFF', () => fillFormFields(websiteConfig))
-			toolbar.appendChild(fillButton)
-		}
+		const fillButton = createButton('⚡ Fill Form', '#007BFF', () => fillFormFields(websiteConfig))
+		toolbar.appendChild(fillButton)
 
 		const settingsButton = createButton('⚙️ Settings', '#343A40', openSettingsModal)
 		toolbar.appendChild(settingsButton)
@@ -190,7 +190,7 @@
 		document.addEventListener('keydown', (event) => {
 			if (event.ctrlKey && event.altKey && (event.key === 'r' || event.key === 'R')) {
 				event.preventDefault()
-				if (websiteConfig) fillFormFields(websiteConfig)
+				fillFormFields(websiteConfig)
 			}
 		})
 	})
