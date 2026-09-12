@@ -180,28 +180,28 @@
 
 		document.body.appendChild(toolbar)
 
-		document.addEventListener('keydown', (e) => {
-			if (e.ctrlKey && e.altKey && (e.key === 'r' || e.key === 'R')) {
-				e.preventDefault()
+		document.addEventListener('keydown', (event) => {
+			if (event.ctrlKey && event.altKey && (event.key === 'r' || event.key === 'R')) {
+				event.preventDefault()
 				if (websiteConfig) fillFormFields(websiteConfig)
 			}
 		})
 	})
 
-	function createButton(text, bgColor, onClick) {
-		const btn = document.createElement('button')
-		btn.textContent = text
-		btn.style.padding = '8px 14px'
-		btn.style.backgroundColor = bgColor
-		btn.style.color = 'white'
-		btn.style.border = 'none'
-		btn.style.borderRadius = '6px'
-		btn.style.cursor = 'pointer'
-		btn.style.fontFamily = 'system-ui, sans-serif'
-		btn.style.fontSize = '13px'
-		btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)'
-		btn.addEventListener('click', onClick)
-		return btn
+	function createButton(text, backgroundColor, onClick) {
+		const button = document.createElement('button')
+		button.textContent = text
+		button.style.padding = '8px 14px'
+		button.style.backgroundColor = backgroundColor
+		button.style.color = 'white'
+		button.style.border = 'none'
+		button.style.borderRadius = '6px'
+		button.style.cursor = 'pointer'
+		button.style.fontFamily = 'system-ui, sans-serif'
+		button.style.fontSize = '13px'
+		button.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)'
+		button.addEventListener('click', onClick)
+		return button
 	}
 
 	function fillFormFields(config) {
@@ -371,9 +371,9 @@
 			location.reload()
 		}
 
-		const modalKeyListener = (e) => {
-			if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-				e.preventDefault()
+		const modalKeyListener = (event) => {
+			if ((event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S')) {
+				event.preventDefault()
 				handleSave()
 			}
 		}
@@ -384,15 +384,15 @@
 			overlay.remove()
 		})
 
-		overlay.addEventListener('click', (e) => {
-			if (e.target === overlay) {
+		overlay.addEventListener('click', (event) => {
+			if (event.target === overlay) {
 				document.removeEventListener('keydown', modalKeyListener)
 				overlay.remove()
 			}
 		})
 
-		document.getElementById('ff-settings-form').addEventListener('submit', (e) => {
-			e.preventDefault()
+		document.getElementById('ff-settings-form').addEventListener('submit', (event) => {
+			event.preventDefault()
 			document.removeEventListener('keydown', modalKeyListener)
 			handleSave()
 		})
