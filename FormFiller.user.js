@@ -58,12 +58,19 @@
 		return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 	}
 
-	const maidenName = profile.maidenName
+	function getMaidenName() {
+		const maidenName = profile.maidenName
+		const name = profile.name
+		return {
+			first: maidenName.first && maidenName.first.trim() !== '' ? maidenName.first : name.first,
+			middle: maidenName.middle && maidenName.middle.trim() !== '' ? maidenName.middle : name.middle,
+			last: maidenName.last && maidenName.last.trim() !== '' ? maidenName.last : name.last,
+		}
+	}
 
+	const maidenName = getMaidenName()
 	const mothersMaidenName = profile.mothersMaidenName
-
 	const birth = profile.birth
-
 	const address = profile.address
 
 	const name_ascii = {
@@ -260,7 +267,7 @@
                 </fieldset>
 
                 <fieldset style="margin-bottom:12px; border:1px solid #ddd; border-radius:6px; padding:10px;">
-                    <legend style="font-weight:bold; font-size:12px;">Maiden Name</legend>
+                    <legend style="font-weight:bold; font-size:12px;">Maiden Name (leave blank to use main name)</legend>
                     <div style="display:flex; gap:8px;">
                         <input type="text" id="ff-m-lastname" placeholder="Last" value="${profile.maidenName.last || ''}" style="width:40%">
                         <input type="text" id="ff-m-firstname" placeholder="First" value="${profile.maidenName.first || ''}" style="width:30%">
